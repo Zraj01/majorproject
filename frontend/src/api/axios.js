@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'https://majorproject-backend-u3ld.onrender.com', 
+  baseURL: import.meta.env.VITE_API_URL || 'https://majorproject-backend-u3ld.onrender.com', 
   headers: { 'Content-Type': 'application/json' },
 });
 
