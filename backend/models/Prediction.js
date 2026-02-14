@@ -1,6 +1,4 @@
-/**
- * Prediction model for storing analysis results
- */
+
 const mongoose = require('mongoose');
 
 const predictionSchema = new mongoose.Schema(

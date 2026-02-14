@@ -116,7 +116,7 @@ export default function Upload() {
         <p className="text-gray-600 mt-1">{subtitle}</p>
 
         <div className="mt-8 grid lg:grid-cols-2 gap-8">
-          {/* Upload card */}
+          
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Upload X-ray Image</h2>
             <form onSubmit={handleSubmit}>
@@ -178,7 +178,7 @@ export default function Upload() {
             </form>
           </div>
 
-          {/* Analysis info card */}
+          
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Analysis Information</h2>
 

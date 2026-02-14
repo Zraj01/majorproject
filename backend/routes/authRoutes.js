@@ -1,6 +1,4 @@
-/**
- * Auth routes: signup, login, getMe
- */
+
 const express = require('express');
 const router = express.Router();
 const { signup, login, getMe } = require('../controllers/authController');

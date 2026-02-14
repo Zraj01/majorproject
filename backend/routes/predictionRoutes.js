@@ -1,6 +1,4 @@
-/**
- * Prediction routes: create (upload), get one, list mine
- */
+
 const express = require('express');
 const router = express.Router();
 const { createPrediction, getPrediction, getMyPredictions } = require('../controllers/predictionController');

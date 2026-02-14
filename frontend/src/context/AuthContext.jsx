@@ -1,6 +1,4 @@
-/**
- * Auth context: user, login, signup, logout
- */
+
 import { createContext, useContext, useState, useEffect } from 'react';
 import api from '../api/axios';
 

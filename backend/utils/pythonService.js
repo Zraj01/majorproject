@@ -1,33 +1,44 @@
+const axios = require("axios");
+const FormData = require("form-data");
+const fs = require("fs");
 
-const simulateInference = (diseaseType) => {
- 
-  const delay = 500 + Math.random() * 1000;
-  return new Promise((resolve) => {
-    setTimeout(() => {
-    
-      const isPositive = Math.random() > 0.5;
-      const confidence = 0.72 + Math.random() * 0.25; 
-      resolve({
-        result: isPositive ? 'Positive' : 'Negative',
-        confidence: Math.round(confidence * 1000) / 1000,
-      });
-    }, delay);
-  });
-};
+const PYTHON_API_URL = process.env.PYTHON_API_URL;
 
 /**
- * Call ML inference (placeholder).
- * @param {string} diseaseType 
- * @param {string} imagePath 
- * @returns {Promise<{ result: string, confidence: number }>}
+ * Call real Python ML inference API
+ * @param {string} diseaseType - PNEUMONIA | TB (TB future use)
+ * @param {string} imagePath - absolute path from multer
  */
 const runInference = async (diseaseType, imagePath) => {
-  const normalizedType = diseaseType.toUpperCase();
-  if (normalizedType !== 'PNEUMONIA' && normalizedType !== 'TB') {
-    throw new Error(`Unsupported disease type: ${diseaseType}`);
+  if (!PYTHON_API_URL) {
+    throw new Error("PYTHON_API_URL not set in .env");
   }
-  
-  return simulateInference(normalizedType.toLowerCase());
+
+  const formData = new FormData();
+
+
+  formData.append("file", fs.createReadStream(imagePath));
+
+  try {
+    const response = await axios.post(
+      `${PYTHON_API_URL}/predict`, 
+      formData,
+      {
+        headers: formData.getHeaders(),
+        timeout: 30000,
+      }
+    );
+
+ 
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      "Python ML API Error:",
+      error.response?.data || error.message
+    );
+    throw new Error("AI inference failed");
+  }
 };
 
 module.exports = { runInference };

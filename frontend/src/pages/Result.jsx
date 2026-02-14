@@ -3,10 +3,10 @@ import { Link, useParams } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 
-// Use relative path so Vite proxy serves uploads from backend
+
 const getImageUrl = (path) => (path?.startsWith('http') ? path : `/${path}`);
 
-// Dummy nearby hospitals for UI
+
 const NEARBY_HOSPITALS = [
   { name: 'City General Hospital', specialty: 'Pulmonology', distance: '2.1 km', rating: 4.8 },
   { name: 'Metropolitan Medical Center', specialty: 'Infectious Diseases', distance: '3.5 km', rating: 4.6 },

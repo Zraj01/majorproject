@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 export default function Landing() {
   return (
     <div className="min-h-screen bg-white">
-      {/* Nav */}
+      
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
@@ -28,7 +28,7 @@ export default function Landing() {
         </div>
       </nav>
 
-      {/* Hero */}
+     
       <section className="pt-28 pb-20 px-4 sm:px-6 max-w-6xl mx-auto md:flex md:items-center md:gap-12">
         <div className="flex-1 animate-fade-in">
           <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
@@ -82,7 +82,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Features */}
+      
       <section id="features" className="py-20 bg-gray-50 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900">Features</h2>
@@ -108,7 +108,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* How it Works */}
+    
       <section id="how-it-works" className="py-20 scroll-mt-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <h2 className="text-3xl font-bold text-center text-gray-900">How It Works</h2>
@@ -129,7 +129,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* About */}
+    
       <section id="about" className="py-20 bg-gray-50 scroll-mt-20">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl font-bold text-gray-900">About MediScan AI</h2>
@@ -142,7 +142,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* CTA */}
+    
       <section className="py-20 bg-primary-700">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
           <h2 className="text-3xl font-bold text-white">Ready to Get Started?</h2>
@@ -164,7 +164,7 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Footer */}
+      
       <footer className="py-8 border-t border-gray-200">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <span className="text-gray-500 text-sm">© {new Date().getFullYear()} MediScan AI. Automated Chest Disease Detection.</span>
