@@ -5,23 +5,24 @@ export default function Landing() {
     <div className="min-h-screen bg-white">
       
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur border-b border-gray-100">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-lg bg-primary-600 flex items-center justify-center">
-              <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+        <div className="max-w-[1100px] mx-auto px-4 sm:px-6 flex items-center justify-between h-20">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-[#2563eb] flex items-center justify-center">
+              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 3v4a5 5 0 0010 0V3M12 8v8m0 0a3 3 0 100 6 3 3 0 000-6z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M7 3h.01M17 3h.01" />
               </svg>
             </div>
-            <span className="font-semibold text-gray-900">MediScan AI</span>
+            <span className="font-bold text-xl text-gray-900 tracking-tight">MediScan AI</span>
           </Link>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-gray-600 hover:text-primary-600 transition">Features</a>
-            <a href="#how-it-works" className="text-gray-600 hover:text-primary-600 transition">How it Works</a>
-            <a href="#about" className="text-gray-600 hover:text-primary-600 transition">About</a>
+          <div className="hidden md:flex items-center gap-10">
+            <a href="#features" className="text-gray-600 font-medium hover:text-[#2563eb] transition">Features</a>
+            <a href="#how-it-works" className="text-gray-600 font-medium hover:text-[#2563eb] transition">How it Works</a>
+            <a href="#about" className="text-gray-600 font-medium hover:text-[#2563eb] transition">About</a>
           </div>
           <Link
             to="/login"
-            className="px-5 py-2.5 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition shadow-sm"
+            className="px-6 py-2.5 bg-[#2563eb] text-white font-medium rounded-xl hover:bg-blue-700 transition"
           >
             Login
           </Link>
@@ -29,55 +30,61 @@ export default function Landing() {
       </nav>
 
      
-      <section className="pt-28 pb-20 px-4 sm:px-6 max-w-6xl mx-auto md:flex md:items-center md:gap-12">
-        <div className="flex-1 animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gray-900 leading-tight">
-            AI-Powered{' '}
-            <span className="text-primary-700">Chest Disease</span>{' '}
-            Detection
+      <div className="absolute top-0 left-0 w-full h-[600px] bg-gradient-to-br from-blue-50/50 to-transparent -z-10 pointer-events-none"></div>
+      <section className="pt-32 pb-20 px-4 sm:px-6 max-w-[1100px] mx-auto md:flex md:items-center md:gap-16 min-h-[calc(100vh-80px)]">
+        <div className="flex-1 animate-fade-in z-10 relative">
+          <h1 className="text-5xl sm:text-[4rem] font-extrabold text-[#111827] leading-[1.1] tracking-tight">
+            <span className="block">AI-Powered</span>
+            <span className="block text-[#1d4ed8]">Chest Disease</span>
+            <span className="block">Detection</span>
           </h1>
-          <p className="mt-6 text-lg text-gray-600 max-w-xl">
+          <p className="mt-6 text-lg text-gray-600 max-w-xl leading-relaxed">
             Revolutionary medical AI that analyzes chest X-rays to detect pneumonia and tuberculosis with 95% accuracy. Get instant, reliable results from anywhere.
           </p>
-          <div className="mt-8 flex flex-wrap gap-4">
+          <div className="mt-10 flex flex-wrap gap-4 items-center">
             <Link
               to="/signup"
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary-600 text-white font-medium rounded-lg hover:bg-primary-700 transition shadow-md"
+              className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#2563eb] text-white font-medium rounded-xl hover:bg-blue-800 transition"
             >
-              Start Analysis <span className="text-lg">→</span>
+              Start Analysis <span className="text-sm ml-1 font-bold">&gt;</span>
             </Link>
             <a
               href="#how-it-works"
-              className="inline-flex items-center px-6 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-lg hover:border-primary-500 hover:text-primary-600 transition"
+              className="inline-flex items-center px-7 py-3.5 border border-gray-200 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition"
             >
               Learn More
             </a>
           </div>
         </div>
-        <div className="flex-1 mt-12 md:mt-0 flex justify-center">
-          <div className="w-full max-w-md bg-gradient-to-br from-primary-50 to-cyan-50 rounded-2xl shadow-xl p-6 border border-primary-100">
-            <div className="aspect-video bg-gradient-to-br from-primary-100 to-cyan-100 rounded-xl flex items-center justify-center mb-4">
-              <div className="text-center">
-                <svg className="w-16 h-16 mx-auto text-primary-600 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14" />
-                </svg>
-                <span className="text-sm text-gray-500">Sample Analysis</span>
-              </div>
+        <div className="flex-1 mt-16 md:mt-0 flex justify-center relative">
+
+          <div className="absolute inset-0 w-full max-w-[480px] mx-auto hidden sm:block">
+            <div className="absolute top-0 -left-6 w-full h-full bg-[#8fbfff] rounded-[2rem] transform -rotate-3 z-0"></div>
+            <div className="absolute top-8 left-8 w-full h-full bg-[#62d3bb] rounded-[2rem] transform rotate-3 z-0"></div>
+          </div>
+          
+          <div className="relative z-10 w-full max-w-[480px] bg-white rounded-[2rem] shadow-[0_20px_50px_-12px_rgba(0,0,0,0.1)] p-4 sm:p-5 border border-gray-50">
+            <div className="w-full aspect-[4/3] sm:aspect-[16/10] bg-gray-100 rounded-2xl overflow-hidden mb-6">
+              <img src="/stethoscope_heart.png" alt="Stethoscope and Heart" className="w-full h-full object-cover" />
             </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-sm">
-                <span className="text-gray-600">Analysis Status</span>
-                <span className="flex items-center gap-1 text-green-600 font-medium">
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"> <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /> </svg>
+            
+            <div className="px-2">
+              <div className="flex items-center justify-between text-xs sm:text-sm mb-3">
+                <span className="text-gray-500">Analysis Status</span>
+                <span className="flex items-center gap-1.5 text-[#219653] font-medium">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /> </svg>
                   Complete
                 </span>
               </div>
-              <div className="h-2 bg-primary-100 rounded-full overflow-hidden">
-                <div className="h-full w-full bg-primary-500 rounded-full" />
+              <div className="h-2.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full w-[95%] bg-[#4ebdc3] rounded-full" />
+              </div>
+              
+              <div className="mt-6 text-center pb-3">
+                <p className="text-2xl font-bold text-gray-900">95% Confidence</p>
+                <p className="text-sm text-gray-500 mt-1">Pneumonia Detection</p>
               </div>
             </div>
-            <p className="mt-4 text-2xl font-bold text-primary-700">95% Confidence</p>
-            <p className="text-sm text-gray-600">Pneumonia Detection</p>
           </div>
         </div>
       </section>

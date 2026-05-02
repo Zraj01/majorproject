@@ -2,15 +2,15 @@ const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 
-// 🔥 Always use project root (important for Render)
+
 const uploadPath = path.join(process.cwd(), 'uploads');
 
-// 👉 Ensure uploads folder exists
+
 if (!fs.existsSync(uploadPath)) {
   fs.mkdirSync(uploadPath, { recursive: true });
 }
 
-// Allowed file types
+
 const allowedMimes = [
   'image/jpeg',
   'image/jpg',
@@ -18,7 +18,7 @@ const allowedMimes = [
   'image/dicom',
 ];
 
-// Storage configuration
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadPath);
@@ -33,7 +33,7 @@ const storage = multer.diskStorage({
   },
 });
 
-// File filter
+
 const fileFilter = (req, file, cb) => {
   if (allowedMimes.includes(file.mimetype)) {
     cb(null, true);
@@ -47,11 +47,11 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-// Multer setup
+
 const upload = multer({
   storage,
   fileFilter,
-  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB
+  limits: { fileSize: 50 * 1024 * 1024 },
 });
 
 module.exports = upload;

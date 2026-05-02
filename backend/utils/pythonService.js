@@ -4,11 +4,7 @@ const fs = require("fs");
 
 const PYTHON_API_URL = process.env.PYTHON_API_URL;
 
-/**
- * Call real Python ML inference API
- * @param {string} diseaseType - PNEUMONIA | TB (TB future use)
- * @param {string} imagePath - absolute path from multer
- */
+
 const runInference = async (diseaseType, imagePath) => {
   if (!PYTHON_API_URL) {
     throw new Error("PYTHON_API_URL not set in .env");

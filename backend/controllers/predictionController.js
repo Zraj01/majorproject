@@ -1,6 +1,7 @@
 const path = require("path");
 const Prediction = require("../models/Prediction");
 const { runInference } = require("../utils/pythonService");
+const { getAnalysisAndGuidance } = require("../utils/geminiService");
 
 const createPrediction = async (req, res) => {
   try {
@@ -11,6 +12,8 @@ const createPrediction = async (req, res) => {
 
     
     const diseaseType = (req.body.diseaseType || "").toUpperCase();
+    const location = req.body.location || "Unknown Location";
+    
     if (!["PNEUMONIA", "TB"].includes(diseaseType)) {
       return res
         .status(400)
@@ -52,13 +55,24 @@ const createPrediction = async (req, res) => {
       result = "Negative";
     }
 
-    
+    const { urgencyLevel, whatToDoNow, warningSigns, locationStatus, nearbyHospitals } = await getAnalysisAndGuidance(
+      diseaseType,
+      result,
+      confidence,
+      location
+    );
+
     const prediction = await Prediction.create({
       userId: req.user._id,
       diseaseType,
       imagePath,
       result,
       confidence,
+      urgencyLevel,
+      whatToDoNow,
+      warningSigns,
+      locationStatus,
+      nearbyHospitals,
     });
 
     
@@ -70,6 +84,11 @@ const createPrediction = async (req, res) => {
         result: prediction.result,
         confidence: prediction.confidence,
         imagePath: prediction.imagePath,
+        urgencyLevel: prediction.urgencyLevel,
+        whatToDoNow: prediction.whatToDoNow,
+        warningSigns: prediction.warningSigns,
+        locationStatus: prediction.locationStatus,
+        nearbyHospitals: prediction.nearbyHospitals,
         createdAt: prediction.createdAt,
       },
     });
@@ -105,6 +124,11 @@ const getPrediction = async (req, res) => {
         result: prediction.result,
         confidence: prediction.confidence,
         imagePath: prediction.imagePath,
+        urgencyLevel: prediction.urgencyLevel,
+        whatToDoNow: prediction.whatToDoNow,
+        warningSigns: prediction.warningSigns,
+        locationStatus: prediction.locationStatus,
+        nearbyHospitals: prediction.nearbyHospitals,
         createdAt: prediction.createdAt,
         user: {
           name: prediction.userId.name,
@@ -131,8 +155,38 @@ const getMyPredictions = async (req, res) => {
   }
 };
 
+const updateHospitals = async (req, res) => {
+  try {
+    const { location } = req.body;
+    const prediction = await Prediction.findById(req.params.id);
+    
+    if (!prediction) {
+      return res.status(404).json({ message: "Prediction not found" });
+    }
+
+    if (prediction.userId.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const { nearbyHospitals } = await getAnalysisAndGuidance(
+      prediction.diseaseType,
+      prediction.result,
+      prediction.confidence,
+      location || "Unknown Location"
+    );
+
+    prediction.nearbyHospitals = nearbyHospitals;
+    await prediction.save();
+
+    res.json({ nearbyHospitals });
+  } catch (error) {
+    res.status(500).json({ message: error.message || "Server error" });
+  }
+};
+
 module.exports = {
   createPrediction,
   getPrediction,
   getMyPredictions,
+  updateHospitals,
 };

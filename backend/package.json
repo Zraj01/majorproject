@@ -8,6 +8,7 @@
     "dev": "nodemon server.js"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "axios": "^1.13.5",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^3.0.3",

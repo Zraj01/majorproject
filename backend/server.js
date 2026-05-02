@@ -11,25 +11,19 @@ const predictionRoutes = require('./routes/predictionRoutes');
 
 const app = express();
 
-/* =========================
-   ✅ SIMPLE OPEN CORS
-========================= */
-
-app.use(cors());   // <-- bas ye hi chahiye
-
-/* ========================= */
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static uploads folder
+
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-// Routes
+
 app.use('/api/auth', authRoutes);
 app.use('/api/predictions', predictionRoutes);
 
-// Health check
+
 app.get('/api/health', (req, res) => {
   const dbConnected = mongoose.connection.readyState === 1;
   res.json({
@@ -39,7 +33,7 @@ app.get('/api/health', (req, res) => {
   });
 });
 
-// Global error handler
+
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(err.status || 500).json({

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 
@@ -43,6 +43,8 @@ export default function Upload() {
     return null;
   }
 
+  const location = "Unknown Location";
+
   const handleDrag = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -84,10 +86,11 @@ export default function Upload() {
       const formData = new FormData();
       formData.append('image', file);
       formData.append('diseaseType', normalizedType);
+      formData.append('location', location);
       const { data } = await api.post('/api/predictions', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
-      navigate(`/result/${data.prediction.id}`);
+      navigate(`/result/${data.prediction.id}`, { state: { imagePreview: preview } });
     } catch (err) {
       setError(err.response?.data?.message || 'Upload failed. Please try again.');
     } finally {

@@ -28,6 +28,31 @@ const predictionSchema = new mongoose.Schema(
       min: 0,
       max: 1,
     },
+    urgencyLevel: {
+      type: String,
+      default: "",
+    },
+    whatToDoNow: {
+      type: [String],
+      default: [],
+    },
+    warningSigns: {
+      type: [String],
+      default: [],
+    },
+    locationStatus: {
+      type: String,
+      default: "",
+    },
+    nearbyHospitals: {
+      type: [{
+        name: String,
+        address: String,
+        distance: String,
+        contact: String,
+      }],
+      default: [],
+    },
     createdAt: {
       type: Date,
       default: Date.now,
