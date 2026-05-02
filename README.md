@@ -67,8 +67,8 @@
   - Copy `.env` and set (or keep placeholders for local dev):
 
     - `PORT=5000`
-    - `MONGO_URI=mongodb+srv://rajchoudhary0311:mnbvcxz@cluster0.8mouzib.mongodb.net/
-    - `JWT_SECRET=hello123
+    - `MONGO_URI=.........
+    - `JWT_SECRET=.......
     - `FRONTEND_URL=http://localhost:5174`
 
   ```bash
