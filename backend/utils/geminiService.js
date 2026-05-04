@@ -87,8 +87,8 @@ const getAnalysisAndGuidance = async (diseaseType, result, confidence, location)
   
   const isLocationAvailable = location && location !== "Unknown Location";
   const locationPrompt = isLocationAvailable
-    ? `The user's location is: ${location}. Please return 3 to 5 nearby hospitals appropriate for this condition.`
-    : `The user's location is NOT available. In "locationStatus", say: "Please enter your city or PIN code to find nearby hospitals." Leave nearbyHospitals empty.`;
+    ? `The user's location is: ${location}. Please return 3 to 5 real nearby hospitals appropriate for this condition in or near that specific location. If the location is just a PIN code, ensure it is treated as an Indian PIN code and find hospitals in that specific area.`
+    : `The user's location is NOT available. In "locationStatus", say: "Please enter your City and PIN code (e.g., 'New Delhi, 110001') to find nearby hospitals." Leave nearbyHospitals empty.`;
 
   const prompt = `
 You are a medical assistance AI incorporated into a healthcare application.
@@ -103,11 +103,13 @@ Generate a valid JSON object with EXACTLY these keys:
 - "whatToDoNow": Array of short action-oriented string instructions
 - "warningSigns": Array of string symptoms
 - "locationStatus": A short string explaining if location was used or needs to be entered.
-- "nearbyHospitals": Array of objects (if location is provided). Each must have "name", "address", "distance", and "contact". If location is NOT provided, leave this empty [].
+- "nearbyHospitals": Array of objects (if location is provided). Each must have "name" (The OFFICIAL, real-world name of the hospital ONLY, do not invent names), "address" (Keep this very brief: just the City and State/Region, do NOT invent street names), "distance", and "contact". If location is NOT provided, leave this empty [].
 - "timestamp": current ISO timestamp string
 
 Ensure whatToDoNow and warningSigns are medically appropriate for ${diseaseType} and the result (${result}).
 If the result is Negative, advise continuing routine care. If Positive, advise seeking medical attention appropriately.
+
+IMPORTANT: Your output MUST be completely valid JSON. Double-check all curly braces {} and square brackets [] to ensure they are properly closed. Every object inside the nearbyHospitals array MUST be properly enclosed in {}. Do not include trailing commas.
 
 Return ONLY valid JSON:
 {
@@ -162,12 +164,16 @@ Return ONLY valid JSON:
       const errorMsg = error?.message || "";
       const errorStatus = error?.status || 0;
 
-
       if (errorStatus === 429 || errorMsg.includes("429") || errorMsg.includes("Quota") || errorMsg.includes("Too Many Requests")) {
         console.warn(`[Gemini API] Key ${currentKeyIndex + 1} hit rate limit. Rotating to next key...`);
         currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
+      } else if (errorStatus === 400 || errorMsg.includes("API_KEY_INVALID") || errorMsg.includes("API key not valid")) {
+        console.warn(`[Gemini API] Key ${currentKeyIndex + 1} is invalid. Rotating to next key...`);
+        currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
+      } else if (errorMsg.includes("Invalid JSON structure returned by Gemini")) {
+        console.warn(`[Gemini API] Invalid JSON response with Key ${currentKeyIndex + 1}. Retrying...`);
+        currentKeyIndex = (currentKeyIndex + 1) % apiKeys.length;
       } else {
-
         break;
       }
     }

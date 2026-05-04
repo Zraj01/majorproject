@@ -23,11 +23,16 @@ const createPrediction = async (req, res) => {
    
     const imagePath = req.file.path;
 
-    
     const inference = await runInference(diseaseType, imagePath);
 
-   
-    
+    if (
+      inference.result === "UNCERTAIN / LOW CONFIDENCE" ||
+      (inference.message && inference.message.includes("not sure"))
+    ) {
+      return res.status(400).json({
+        message: "The uploaded image does not appear to be a clear chest X-ray. Please upload a valid chest X-ray image.",
+      });
+    }
 
    
     const modelResult = String(inference.result).toUpperCase().trim();

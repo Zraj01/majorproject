@@ -85,4 +85,33 @@ const getMe = async (req, res) => {
   }
 };
 
-module.exports = { signup, login, getMe };
+const resetPassword = async (req, res) => {
+  try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        message: 'Database unavailable. Check your internet and MongoDB Atlas connection.',
+      });
+    }
+    const { email, newPassword } = req.body;
+    if (!email || !newPassword) {
+      return res.status(400).json({ message: 'Please provide email and new password' });
+    }
+    const emailLower = String(email).trim().toLowerCase();
+    const user = await User.findOne({ email: emailLower }).select('+password');
+    if (!user) {
+      return res.status(404).json({ message: 'User not found with this email' });
+    }
+    
+    // In a real application, an OTP or email link would be sent here
+    // For demo purposes, we directly update the password
+    user.password = newPassword;
+    await user.save();
+    
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('Reset Password error:', error);
+    res.status(500).json({ message: error.message || 'Server error' });
+  }
+};
+
+module.exports = { signup, login, getMe, resetPassword };

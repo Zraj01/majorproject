@@ -6,7 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const getImageUrl = (path) => {
   if (!path) return '';
   if (path.startsWith('http')) return path;
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+  const baseUrl = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? '' : 'http://localhost:5000');
   return `${baseUrl}/${path.replace(/^\//, '')}`;
 };
 
@@ -52,26 +52,21 @@ export default function Result() {
     window.print();
   };
 
-  const handleFindHospitals = async () => {
+  const toggleHospitals = () => {
     setShowHospitals(!showHospitals);
-    if (showHospitals) return;
-
-    if (locationStatus === "Manual location required" || locationStatus.includes("required")) {
-      if (!manualLocation.trim()) return;
-      setFetchingHospitals(true);
-      try {
-        const { data: res } = await api.post(`/api/predictions/${id}/hospitals`, { location: manualLocation });
-        setHospitals(res.nearbyHospitals || []);
-        setLocation(manualLocation);
-        setLocationStatus(`Location: ${manualLocation}`);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setFetchingHospitals(false);
-      }
-      return;
+    if (!showHospitals && locationStatus.includes("required") && !manualLocation.trim()) {
+       // if we're just opening the panel and need location, don't auto-fetch
+       // we can try geolocation if we haven't yet
+       if (navigator.geolocation && locationStatus === "Pending") {
+         fetchHospitalsWithLocation();
+       }
+    } else if (!showHospitals) {
+       // just opening it, and either we have a location or we already know we need manual
+       if (locationStatus === "Pending") fetchHospitalsWithLocation();
     }
+  };
 
+  const fetchHospitalsWithLocation = () => {
     if (navigator.geolocation) {
       setFetchingHospitals(true);
       navigator.geolocation.getCurrentPosition(
@@ -99,6 +94,22 @@ export default function Result() {
       setLocationStatus("Location access is required to find nearby hospitals.");
     }
   };
+
+  const handleManualHospitalSearch = async () => {
+    if (!manualLocation.trim()) return;
+    setFetchingHospitals(true);
+    try {
+      const { data: res } = await api.post(`/api/predictions/${id}/hospitals`, { location: manualLocation });
+      setHospitals(res.nearbyHospitals || []);
+      setLocation(manualLocation);
+      setLocationStatus(`Location: ${manualLocation}`);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setFetchingHospitals(false);
+    }
+  };
+
 
   if (loading) {
     return (
@@ -351,7 +362,7 @@ export default function Result() {
                   <svg className="w-6 h-6 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                   <span className="text-xs font-medium text-center">AI Guidance</span>
                 </button>
-                <button onClick={handleFindHospitals} className={`flex flex-col items-center justify-center p-3 rounded-xl border transition ${showHospitals ? 'bg-primary-50 border-primary-200 text-primary-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
+                <button onClick={toggleHospitals} className={`flex flex-col items-center justify-center p-3 rounded-xl border transition ${showHospitals ? 'bg-primary-50 border-primary-200 text-primary-700' : 'bg-white border-gray-200 text-gray-700 hover:bg-gray-50'}`}>
                   <svg className="w-6 h-6 mb-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
                   <span className="text-xs font-medium text-center">Hospitals</span>
                 </button>
@@ -373,21 +384,19 @@ export default function Result() {
                   <h2 className="text-md font-semibold text-gray-900">Nearby Hospitals</h2>
                   <p className="text-xs text-gray-500 mt-1">{locationStatus}</p>
                   
-                  {locationStatus.includes("required") && (
-                    <div className="mt-4 flex items-center gap-2">
-                      <input 
-                        type="text" 
-                        value={manualLocation}
-                        onChange={(e) => setManualLocation(e.target.value)}
-                        placeholder="Enter City/PIN" 
-                        className="px-3 py-1.5 w-full border border-gray-200 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
-                        onKeyDown={(e) => e.key === 'Enter' && handleFindHospitals()}
-                      />
-                      <button onClick={handleFindHospitals} disabled={fetchingHospitals} className="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 disabled:opacity-50">
-                        {fetchingHospitals ? '...' : 'Find'}
-                      </button>
-                    </div>
-                  )}
+                  <div className="mt-4 flex items-center gap-2">
+                    <input 
+                      type="text" 
+                      value={manualLocation}
+                      onChange={(e) => setManualLocation(e.target.value)}
+                      placeholder="Enter City & PIN (e.g., Delhi, 110001)" 
+                      className="px-3 py-1.5 w-full border border-gray-200 rounded-lg text-sm outline-none focus:border-primary-500 focus:ring-1 focus:ring-primary-500"
+                      onKeyDown={(e) => e.key === 'Enter' && handleManualHospitalSearch()}
+                    />
+                    <button onClick={handleManualHospitalSearch} disabled={fetchingHospitals} className="px-3 py-1.5 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 disabled:opacity-50">
+                      {fetchingHospitals ? '...' : 'Search'}
+                    </button>
+                  </div>
                 </div>
 
                 <div className="p-2 max-h-[320px] overflow-y-auto">
