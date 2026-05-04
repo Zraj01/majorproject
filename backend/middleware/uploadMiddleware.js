@@ -3,11 +3,14 @@ const fs = require('fs');
 const multer = require('multer');
 
 
-const uploadPath = path.join(process.cwd(), 'uploads');
-
+const uploadPath = process.env.VERCEL ? '/tmp' : path.join(process.cwd(), 'uploads');
 
 if (!fs.existsSync(uploadPath)) {
-  fs.mkdirSync(uploadPath, { recursive: true });
+  try {
+    fs.mkdirSync(uploadPath, { recursive: true });
+  } catch (err) {
+    console.error('Failed to create upload directory:', err);
+  }
 }
 
 
